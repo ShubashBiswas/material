@@ -18,13 +18,13 @@
 <nav class="cmp_breadcrumbs text-slate-500" role="navigation" aria-label="{translate key="navigation.breadcrumbLabel"}">
 	<ol class="not-prose flex space-x-1 list-none overflow-none">
 		<li class="flex space-x-1 truncate">
-			<a class="hover:text-slate-700 dark:hover:text-slate-400" href="{url page="index" router=\PKP\core\PKPApplication::ROUTE_PAGE}">
+			<a class="hover:text-slate-700 dark:hover:text-slate-400" href="{url page="index"}">
 				{translate key="common.homepageNavigationLabel"}
 			</a>
 			<span class="separator">{translate key="navigation.breadcrumbSeparator"}</span>
 		</li>
 		<li class="flex space-x-1 truncate">
-			<a class="hover:text-slate-700 dark:hover:text-slate-400" href="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="issue" op="archive"}">
+			<a class="hover:text-slate-700 dark:hover:text-slate-400" href="{url page="issue" op="archive"}">
 				{translate key="navigation.archives"}
 			</a>
 			<span class="separator">{translate key="navigation.breadcrumbSeparator"}</span>

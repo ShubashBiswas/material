@@ -17,21 +17,21 @@
 		{material_submenu}
 			{if !empty($forReaders)}
 				{material_submenu_item}
-					{material_submenu_link url="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="information" op="readers"}"}
+					{material_submenu_link url="{url page="information" op="readers"}"}
 						{translate key="navigation.infoForReaders"}
 					{/material_submenu_link}
 				{/material_submenu_item}
 			{/if}
 			{if !empty($forAuthors)}
 				{material_submenu_item}
-					{material_submenu_link url="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="information" op="authors"}"}
+					{material_submenu_link url="{url page="information" op="authors"}"}
 						{translate key="navigation.infoForAuthors"}
 					{/material_submenu_link}
 				{/material_submenu_item}
 			{/if}
 			{if !empty($forLibrarians)}
 				{material_submenu_item}
-					{material_submenu_link url="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="information" op="librarians"}"}
+					{material_submenu_link url="{url page="information" op="librarians"}"}
 						{translate key="navigation.infoForLibrarians"}
 					{/material_submenu_link}
 				{/material_submenu_item}

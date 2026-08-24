@@ -94,3 +94,52 @@ msgstr "Vertical"
 
 msgid "plugins.themes.material.option.primaryMenu.horizontal"
 msgstr "Horizontal"
+
+msgid "plugins.themes.material.option.showSocialShare.label"
+msgstr "Social Sharing Buttons"
+
+msgid "plugins.themes.material.option.showSocialShare.description"
+msgstr "Display social media share buttons on article detail pages."
+
+msgid "plugins.themes.material.option.showSocialShare.option"
+msgstr "Enable article social sharing buttons."
+
+msgid "plugins.themes.material.option.showReadingTime.label"
+msgstr "Estimated Reading Time"
+
+msgid "plugins.themes.material.option.showReadingTime.description"
+msgstr "Display estimated reading time badge on article detail pages."
+
+msgid "plugins.themes.material.option.showReadingTime.option"
+msgstr "Show estimated reading time on articles."
+
+msgid "plugins.themes.material.option.announcementText.label"
+msgstr "Announcement Banner"
+
+msgid "plugins.themes.material.option.announcementText.description"
+msgstr "Text to display in the top announcement bar across the header (leave empty to hide)."
+
+msgid "plugins.themes.material.readingTime.label"
+msgstr "Estimated Read"
+
+msgid "plugins.themes.material.readingTime.minutes"
+msgstr "min read"
+
+msgid "plugins.themes.material.share.label"
+msgstr "Share Article"
+
+msgid "plugins.themes.material.share.copyLink"
+msgstr "Copy Link"
+
+msgid "plugins.themes.material.share.linkCopied"
+msgstr "Link Copied!"
+
+msgid "plugins.themes.material.backToTop"
+msgstr "Back to Top"
+
+msgid "plugins.themes.material.citation.copy"
+msgstr "Copy Citation"
+
+msgid "plugins.themes.material.citation.copied"
+msgstr "Citation Copied!"
+

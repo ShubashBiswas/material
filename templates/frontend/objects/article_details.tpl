@@ -71,7 +71,10 @@
 <article class="obj_article_details">
 
 	{* Indicate if this is only a preview *}
-	{if $publication->getData('status') !== \PKP\submission\PKPSubmission::STATUS_PUBLISHED}
+	{if $publication->getData('status') !== $smarty.const.STATUS_PUBLISHED}
+
+
+
 	<div class="cmp_notification notice">
 		{capture assign="submissionUrl"}{url page="workflow" op="access" path=$article->getId()}{/capture}
 		{translate key="submission.viewingPreview" url=$submissionUrl}
@@ -87,24 +90,29 @@
 		</div>
 	{/if}
 
-	<h1 class="page_title">
+	<h1 class="page_title w-full max-w-none break-words text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
 		{$publication->getLocalizedTitle(null, 'html')|strip_unsafe_html}
 	</h1>
 
 	{if $publication->getLocalizedData('subtitle')}
-		<h2 class="subtitle">
+		<h2 class="subtitle w-full max-w-none break-words text-lg sm:text-xl font-medium text-slate-600 dark:text-slate-400 mt-2 leading-snug">
 			{$publication->getLocalizedSubTitle(null, 'html')|strip_unsafe_html}
 		</h2>
 	{/if}
 
+
+	{if $activeTheme->getOption('showReadingTime')}
+		<div class="mt-3 inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-{$activeTheme->getBaseColour()}-50 text-{$activeTheme->getBaseColour()}-700 dark:bg-{$activeTheme->getBaseColour()}-950/40 dark:text-{$activeTheme->getBaseColour()}-300 border border-{$activeTheme->getBaseColour()}-200 dark:border-{$activeTheme->getBaseColour()}-800">
+			<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+			<span>{translate key="plugins.themes.material.readingTime.label"}: {material_reading_time text=$publication->getLocalizedData('abstract')}</span>
+		</div>
+	{/if}
+
 	<div class="row not-prose">
 		<div>
-			<!--div class="px-4 sm:px-0">
-				<h3 class="text-base/7 font-semibold text-white">Applicant Information</h3>
-				<p class="mt-1 max-w-2xl text-sm/6 text-slate-400">Personal details and application.</p>
-			</div-->
 			<div class="mt-6 border-t border-slate-200 dark:border-slate-800">
 				<dl class="divide-y divide-slate-200 dark:divide-slate-800 my-0">
+
 					{if $publication->getData('authors')}
 						<div class="px-0 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
 							<dt class="_text-sm/6 font-medium _text-slate-800">
@@ -115,9 +123,6 @@
 									{foreach from=$publication->getData('authors') item=author}
 										<li class="flex justify-between gap-x-6 py-5 first:pt-0">
 											<div class="flex min-w-0 gap-x-4">
-												<!--svg viewBox="0 0 24 24" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-12 text-slate-500 sm:block hidden">
-													<path d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" fill-rule="evenodd"></path>
-												</svg-->
 												<div class="min-w-0 flex-auto">
 													<p class="text-sm/6 font-semibold text-gray-900 dark:text-gray-200">
 														{$author->getFullName()|escape}
@@ -196,11 +201,13 @@
 							</dt>
 							<dd class="mt-1 _text-sm/6 text-slate-400 sm:col-span-2 sm:mt-0">
 								{foreach name="keywords" from=$publication->getLocalizedData('keywords') item="keyword"}
-									{$keyword|escape}{if !$smarty.foreach.keywords.last}{translate key="common.commaListSeparator"}{/if}
+									{$keyword.name|default:$keyword|escape}{if !$smarty.foreach.keywords.last}{translate key="common.commaListSeparator"}{/if}
 								{/foreach}
 							</dd>
 						</div>
 					{/if}
+
+
 
 					{* Abstract *}
 					{if $publication->getLocalizedData('abstract')}
@@ -214,7 +221,34 @@
 						</div>
 					{/if}
 
+					{* Social Sharing Buttons *}
+					{if $activeTheme->getOption('showSocialShare')}
+						<div class="px-0 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
+							<dt class="_text-sm/6 font-medium _text-slate-800">
+								{translate key="plugins.themes.material.share.label"}
+							</dt>
+							<dd class="mt-1 _text-sm/6 text-slate-400 sm:col-span-2 sm:mt-0" x-data="{ copied: false }">
+								<div class="flex flex-wrap items-center gap-2">
+									<a href="https://twitter.com/intent/tweet?text={$publication->getLocalizedTitle(null, 'html')|strip_tags|escape:'url'}&url={$currentUrl|escape:'url'}" target="_blank" rel="noopener" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors" title="Share on X / Twitter">
+										<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+									</a>
+									<a href="https://www.linkedin.com/sharing/share-offsite/?url={$currentUrl|escape:'url'}" target="_blank" rel="noopener" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors" title="Share on LinkedIn">
+										<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+									</a>
+									<a href="https://www.facebook.com/sharer/sharer.php?u={$currentUrl|escape:'url'}" target="_blank" rel="noopener" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors" title="Share on Facebook">
+										<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.5C10 7.01 11.49 5.65 13.7 5.65c1.06 0 2.17.19 2.17.19v2.38h-1.22c-1.23 0-1.62.77-1.62 1.56V12h2.69l-.43 3h-2.26v6.8c4.56-.93 8-4.96 8-9.8z"/></svg>
+									</a>
+									<button @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2500)" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors">
+										<svg class="w-4 h-4 text-{$activeTheme->getBaseColour()}-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+										<span x-text="copied ? '{translate key="plugins.themes.material.share.linkCopied"}' : '{translate key="plugins.themes.material.share.copyLink"}'"></span>
+									</button>
+								</div>
+							</dd>
+						</div>
+					{/if}
+
 					{call_hook name="Templates::Article::Main"}
+
 
 					{* Usage statistics chart*}
 					{if $activeTheme->getOption('displayStats') != 'none'}
@@ -443,7 +477,8 @@
 								<dd class="mt-1 _text-sm/6 text-slate-400 sm:col-span-2 sm:mt-0">
 									<ul class="categories">
 										{foreach from=$categories item=category}
-											<li><a class="text-{$activeTheme->getBaseColour()}-400" href="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="catalog" op="category" path=$category->getPath()|escape}">{$category->getLocalizedTitle()|escape}</a></li>
+											<li><a class="text-{$activeTheme->getBaseColour()}-400" href="{url page="catalog" op="category" path=$category->getPath()|escape}">{$category->getLocalizedTitle()|escape}</a></li>
+
 										{/foreach}
 									</ul>
 								</dd>

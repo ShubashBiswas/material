@@ -17,17 +17,17 @@
 
 	{material_submenu}
 		{material_submenu_item}
-			{material_submenu_link url="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="gateway" op="plugin" path="AnnouncementFeedGatewayPlugin"|to_array:"atom"}"}
+			{material_submenu_link url="{url page="gateway" op="plugin" path="AnnouncementFeedGatewayPlugin"|to_array:"atom"}"}
 				<img src="{$baseUrl}/lib/pkp/templates/images/atom.svg" alt="{translate key="plugins.generic.announcementfeed.atom.altText"}">
 			{/material_submenu_link}
 		{/material_submenu_item}
 		{material_submenu_item}
-			{material_submenu_link url="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="gateway" op="plugin" path="AnnouncementFeedGatewayPlugin"|to_array:"rss2"}"}
+			{material_submenu_link url="{url page="gateway" op="plugin" path="AnnouncementFeedGatewayPlugin"|to_array:"rss2"}"}
 				<img src="{$baseUrl}/lib/pkp/templates/images/rss20_logo.svg" alt="{translate key="plugins.generic.announcementfeed.rss2.altText"}">
 			{/material_submenu_link}
 		{/material_submenu_item}
 		{material_submenu_item}
-			{material_submenu_link url="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="gateway" op="plugin" path="AnnouncementFeedGatewayPlugin"|to_array:"rss"}"}
+			{material_submenu_link url="{url page="gateway" op="plugin" path="AnnouncementFeedGatewayPlugin"|to_array:"rss"}"}
 				<img src="{$baseUrl}/lib/pkp/templates/images/rss10_logo.svg" alt="{translate key="plugins.generic.announcementfeed.rss1.altText"}">
 			{/material_submenu_link}
 		{/material_submenu_item}

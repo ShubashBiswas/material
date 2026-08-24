@@ -13,7 +13,8 @@
 
 	{material_submenu}
 		{material_submenu_item}
-			{material_submenu_link url="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="about" op="submissions"}"}
+			{material_submenu_link url="{url page="about" op="submissions"}"}
+
 				{translate key="plugins.block.makeSubmission.linkLabel"}
 			{/material_submenu_link}
 		{/material_submenu_item}

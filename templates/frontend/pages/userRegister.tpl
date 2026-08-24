@@ -57,7 +57,7 @@
 								</span>
 								<span class="ml-2">
 									{capture assign="privacyUrl"}
-										{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="about" op="privacy"}
+										{url page="about" op="privacy"}
 									{/capture}
 									{translate key="user.register.form.privacyConsent" privacyUrl=$privacyUrl}
 								</span>
@@ -168,19 +168,21 @@
 				<div class="fields">
 					<div class="optin optin-privacy">
 						<label>
-							{if $privacyConsent[\PKP\core\PKPApplication::CONTEXT_ID_NONE]} 
+							{if $privacyConsent[$siteContextId]} 
 								{material_checkbox
-									name="privacyConsent[{\PKP\core\PKPApplication::CONTEXT_ID_NONE}]"
-									id="privacyConsent[{\PKP\core\PKPApplication::CONTEXT_ID_NONE}]"
+									name="privacyConsent[{$siteContextId}]"
+									id="privacyConsent[{$siteContextId}]"
 									value="1"
 									checked="checked"}
 							{else}
 								{material_checkbox
-									name="privacyConsent[{\PKP\core\PKPApplication::CONTEXT_ID_NONE}]"
-									id="privacyConsent[{\PKP\core\PKPApplication::CONTEXT_ID_NONE}]"
+									name="privacyConsent[{$siteContextId}]"
+									id="privacyConsent[{$siteContextId}]"
 									value="1"}
 							{/if}
-							{capture assign="privacyUrl"}{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="about" op="privacy"}{/capture}
+
+							{capture assign="privacyUrl"}{url page="about" op="privacy"}{/capture}
+
 							{translate key="user.register.form.privacyConsent" privacyUrl=$privacyUrl}
 						</label>
 					</div>

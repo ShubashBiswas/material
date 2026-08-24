@@ -8,7 +8,7 @@
  *}
 
 {if $displayPageHeaderLogo}
-	<a href="{url page="index" router=$smarty.const.ROUTE_PAGE}">
+	<a href="{url page="index"}">
 		<img
 			src="{$publicFilesDir}/{$displayPageHeaderLogo.uploadName|escape:"url"}"
 			width="{$displayPageHeaderLogo.width|escape}"
@@ -20,7 +20,7 @@
 			style="max-width: 180px;"/>
 	</a>
 {else}
-	<a aria-label="Home page" href="/">
+	<a aria-label="Home page" href="{url page="index"}">
 		{include file="frontend/components/ui/material_icon_logo.tpl" small=$small}
 	</a>
 {/if}

@@ -27,7 +27,8 @@
 					{foreach from=$browseCategories item=browseCategory}
 						{if !$browseSeriesItem->getIsInactive()}
 							{material_submenu_item class="category_{$browseCategory->getId()}{if $browseCategory->getParentId()} is_sub{/if}{if $browseBlockSelectedCategory == $browseCategory->getPath()} current{/if}"}
-								{material_submenu_link url="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="catalog" op="category" path=$browseCategory->getPath()|escape}"}
+								{material_submenu_link url="{url page="catalog" op="category" path=$browseCategory->getPath()|escape}"}
+
 									{$browseCategory->getLocalizedTitle()|escape}
 								{/material_submenu_link}
 							{/material_submenu_item}

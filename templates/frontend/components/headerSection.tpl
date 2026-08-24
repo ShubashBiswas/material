@@ -9,69 +9,54 @@
  *  bg-sky-300
  *  bg-indigo-300
  *  bg-orange-300
+ *  bg-emerald-300
+ *  bg-purple-300
+ *  bg-violet-300
+ *  bg-teal-300
+ *  bg-rose-300
+ *  bg-amber-300
+ *  bg-slate-300
  *  focus-visible:outline-green-300/50
- *  focus-visible:outline-blue-300/5
- *  focus-visible:outline-sky-300/5
- *  focus-visible:outline-indigo-300/5
- *  focus-visible:outline-orange-300/5
+ *  focus-visible:outline-blue-300/50
+ *  focus-visible:outline-sky-300/50
+ *  focus-visible:outline-indigo-300/50
+ *  focus-visible:outline-orange-300/50
+ *  focus-visible:outline-emerald-300/50
+ *  focus-visible:outline-purple-300/50
+ *  focus-visible:outline-violet-300/50
+ *  focus-visible:outline-teal-300/50
+ *  focus-visible:outline-rose-300/50
+ *  focus-visible:outline-amber-300/50
+ *  focus-visible:outline-slate-300/50
  *  active:bg-green-500
  *  active:bg-blue-500
  *  active:bg-sky-500
  *  active:bg-indigo-500
  *  active:bg-orange-500
+ *  active:bg-emerald-500
+ *  active:bg-purple-500
+ *  active:bg-violet-500
+ *  active:bg-teal-500
+ *  active:bg-rose-500
+ *  active:bg-amber-500
+ *  active:bg-slate-500
  *  hover:bg-green-200
  *  hover:bg-blue-200
  *  hover:bg-sky-200
  *  hover:bg-indigo-200
  *  hover:bg-orange-200
- *  prose-a:text-green-400
- *  prose-a:text-blue-400
- *  prose-a:text-sky-400
- *  prose-a:text-indigo-400
- *  prose-a:text-orange-400
- *  dark:prose-a:text-green-400
- *  dark:prose-a:text-blue-400
- *  dark:prose-a:text-sky-400
- *  dark:prose-a:text-indigo-400
- *  dark:prose-a:text-orange-400
- *  text-green-500
- *  text-blue-500
- *  text-sky-500
- *  text-indigo-500
- *  text-orange-500
- *  before:bg-green-500
- *  before:bg-blue-500
- *  before:bg-sky-500
- *  before:bg-indigo-500
- *  before:bg-orange-500
- *  focus:border-green-300
- *  focus:border-blue-300
- *  focus:border-sky-300
- *  focus:border-indigo-300
- *  focus:border-orange-300
- *  focus:ring-green-200
- *  focus:ring-blue-200
- *  focus:ring-sky-200
- *  focus:ring-indigo-200
- *  focus:ring-orange-200
- *  text-green-600
- *  text-blue-600
- *  text-sky-600
- *  text-indigo-600
- *  text-orange-600
- *  text-green-400
- *  text-sky-400
- *  text-indigo-400
- *  text-blue-400
- *  text-sky-400
- *  text-orange-400
- *  fill-green-400
- *  fill-sky-400
- *  fill-indigo-400
- *  fill-blue-400
- *  fill-sky-400
- *  fill-orange-400
- *  dark:bg-gray-800
+ *  hover:bg-emerald-200
+ *  hover:bg-purple-200
+ *  hover:bg-violet-200
+ *  hover:bg-teal-200
+ *  hover:bg-rose-200
+ *  hover:bg-amber-200
+ *  hover:bg-slate-200
+ *  font-inter
+ *  font-plus-jakarta-sans
+ *  font-open-sans
+ *  font-merriweather
+ *  font-lora
  *  font-comic-sans
  *  font-comic-neue
  *  font-cardo
@@ -100,27 +85,16 @@
                 </div>
               {/if}
               <div class="mt-8 flex gap-4 md:justify-center lg:justify-start">
-                <a class="rounded-full bg-{$activeTheme->getBaseColour()}-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-{$activeTheme->getBaseColour()}-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-{$activeTheme->getBaseColour()}-300/50 active:bg-{$activeTheme->getBaseColour()}-500" href="{url router=$smarty.const.ROUTE_PAGE page="about" op="submissions"}" role="button">
+                <a class="rounded-full bg-{$activeTheme->getBaseColour()}-300 py-2 px-4 text-sm font-semibold text-slate-900 hover:bg-{$activeTheme->getBaseColour()}-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-{$activeTheme->getBaseColour()}-300/50 active:bg-{$activeTheme->getBaseColour()}-500" href="{url page="about" op="submissions"}" role="button">
                   {translate key="plugins.themes.material.makeSubmission"}
                 </a>
-                <a class="rounded-full bg-slate-800 py-2 px-4 text-sm font-medium text-white hover:bg-slate-700 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/50 active:text-slate-400" href="{url router=$smarty.const.ROUTE_PAGE page="issue" op="archive"}">
+                <a class="rounded-full bg-slate-800 py-2 px-4 text-sm font-medium text-white hover:bg-slate-700 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/50 active:text-slate-400" href="{url page="issue" op="archive"}">
                   {translate key="archive.archives"}
                 </a>
               </div>
             </div>
          </div>
-         {if !isset($homepageImageUrl)}
-            <div class="relative lg:static xl:pl-10">
-               <!--div class="relative">
-                  <div class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg"></div>
-                  <div class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10"></div>
-                  <div class="relative rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur">
-                     <div class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-sky-300/0 via-sky-300/70 to-sky-300/0"></div>
-                     <div class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-400 to-blue-400/0"></div>
-                  </div>
-               </div-->
-            </div>
-         {/if}
       </div>
    </div>
 </div>
+

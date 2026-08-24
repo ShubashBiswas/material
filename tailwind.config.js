@@ -2,7 +2,12 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./templates/**/*.{tpl,html,js}","*.php"],
+  content: ["./templates/**/*.{tpl,html,js}", "*.php"],
+  safelist: [
+    {
+      pattern: /(bg|text|border|ring|hover:bg|hover:text|focus:border|focus:ring|active:bg)-(green|indigo|blue|sky|orange|emerald|purple|violet|teal|rose|amber|slate)-(100|200|300|400|500|600|700|800|900)/,
+    },
+  ],
   darkMode: 'class',
   theme: {
     fontSize: {
@@ -22,6 +27,11 @@ module.exports = {
     },
     extend: {
       fontFamily: {
+        'inter': ['Inter', ...defaultTheme.fontFamily.sans],
+        'merriweather': ['Merriweather', ...defaultTheme.fontFamily.serif],
+        'lora': ['Lora', ...defaultTheme.fontFamily.serif],
+        'open-sans': ['Open Sans', ...defaultTheme.fontFamily.sans],
+        'plus-jakarta-sans': ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
         'comic-sans': ['Comic Sans', ...defaultTheme.fontFamily.sans],
         'comic-neue': ['Comic Neue', ...defaultTheme.fontFamily.sans],
         'cardo': ['Cardo', ...defaultTheme.fontFamily.sans],
@@ -37,7 +47,7 @@ module.exports = {
   plugins: [
     require('@tailwindcss/typography'),
     require('@tailwindcss/forms'),
-    require('@tailwindcss/line-clamp'),
     require('tailwind-scrollbar')
   ],
 }
+

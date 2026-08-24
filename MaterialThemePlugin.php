@@ -18,6 +18,8 @@ use APP\file\PublicFileManager;
 use PKP\config\Config;
 use PKP\core\PKPSessionGuard;
 use APP\template\TemplateManager;
+use PKP\plugins\Hook;
+
 
 class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
 {
@@ -67,24 +69,52 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
             'label' => __('plugins.themes.material.option.colour.label'),
             'options' => [
                 [
-                    'value' => 'green',
-                    'label' => 'Green',
-                ],
-                [
-                    'value' => 'indigo',
-                    'label' => 'Indigo',
+                    'value' => 'sky',
+                    'label' => 'Sky',
                 ],
                 [
                     'value' => 'blue',
                     'label' => 'Blue',
                 ],
                 [
-                    'value' => 'sky',
-                    'label' => 'Sky',
+                    'value' => 'indigo',
+                    'label' => 'Indigo',
+                ],
+                [
+                    'value' => 'purple',
+                    'label' => 'Purple',
+                ],
+                [
+                    'value' => 'violet',
+                    'label' => 'Violet',
+                ],
+                [
+                    'value' => 'teal',
+                    'label' => 'Teal',
+                ],
+                [
+                    'value' => 'emerald',
+                    'label' => 'Emerald',
+                ],
+                [
+                    'value' => 'green',
+                    'label' => 'Green',
                 ],
                 [
                     'value' => 'orange',
                     'label' => 'Orange',
+                ],
+                [
+                    'value' => 'amber',
+                    'label' => 'Amber',
+                ],
+                [
+                    'value' => 'rose',
+                    'label' => 'Rose',
+                ],
+                [
+                    'value' => 'slate',
+                    'label' => 'Slate',
                 ],
             ],
             'default' => 'sky',
@@ -95,12 +125,28 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
             'label' => __('plugins.themes.material.option.font.label'),
             'options' => [
                 [
-                    'value' => 'comic-sans',
-                    'label' => 'Comic Sans',
+                    'value' => 'inter',
+                    'label' => 'Inter (Modern Sans)',
                 ],
                 [
-                    'value' => 'comic-neue',
-                    'label' => 'Comic Neue',
+                    'value' => 'plus-jakarta-sans',
+                    'label' => 'Plus Jakarta Sans',
+                ],
+                [
+                    'value' => 'open-sans',
+                    'label' => 'Open Sans',
+                ],
+                [
+                    'value' => 'merriweather',
+                    'label' => 'Merriweather (Academic Serif)',
+                ],
+                [
+                    'value' => 'lora',
+                    'label' => 'Lora (Editorial Serif)',
+                ],
+                [
+                    'value' => 'roboto-serif',
+                    'label' => 'Roboto Serif',
                 ],
                 [
                     'value' => 'cardo',
@@ -115,11 +161,45 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
                     'label' => 'Old Standard TT',
                 ],
                 [
-                    'value' => 'roboto-serif',
-                    'label' => 'Roboto Serif',
+                    'value' => 'comic-neue',
+                    'label' => 'Comic Neue',
+                ],
+                [
+                    'value' => 'comic-sans',
+                    'label' => 'Comic Sans',
                 ],
             ],
-            'default' => 'comic-neue',
+            'default' => 'inter',
+        ]);
+
+        $this->addOption('showSocialShare', 'FieldOptions', [
+            'label' => __('plugins.themes.material.option.showSocialShare.label'),
+            'description' => __('plugins.themes.material.option.showSocialShare.description'),
+            'options' => [
+                [
+                    'value' => true,
+                    'label' => __('plugins.themes.material.option.showSocialShare.option'),
+                ],
+            ],
+            'default' => true,
+        ]);
+
+        $this->addOption('showReadingTime', 'FieldOptions', [
+            'label' => __('plugins.themes.material.option.showReadingTime.label'),
+            'description' => __('plugins.themes.material.option.showReadingTime.description'),
+            'options' => [
+                [
+                    'value' => true,
+                    'label' => __('plugins.themes.material.option.showReadingTime.option'),
+                ],
+            ],
+            'default' => true,
+        ]);
+
+        $this->addOption('announcementText', 'FieldText', [
+            'label' => __('plugins.themes.material.option.announcementText.label'),
+            'description' => __('plugins.themes.material.option.announcementText.description'),
+            'default' => '',
         ]);
 
         // Add usage stats display options
@@ -165,6 +245,10 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
         $templateManager->assign('jquery', $this->getJqueryPath($request));
         $templateManager->assign('jqueryUI', $this->getJqueryUIPath($request));
 
+        if (!class_exists('PKPApplication', false)) { @class_alias('\PKP\core\PKPApplication', 'PKPApplication'); }
+        if (!class_exists('PKPSubmission', false)) { @class_alias('\PKP\submission\PKPSubmission', 'PKPSubmission'); }
+        if (!class_exists('Submission', false)) { @class_alias('\APP\submission\Submission', 'Submission'); }
+        if (!class_exists('Journal', false)) { @class_alias('\APP\journal\Journal', 'Journal'); }
         $plugins = [
             'material_button_primary' => ['block', 'smartyMaterialButtonPrimary'],
             'material_button_secondary' => ['block', 'smartyMaterialButtonSecondary'],
@@ -183,13 +267,38 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
             'material_sidestack' => ['block', 'smartyMaterialSidestack'],
             'material_input' => ['function', 'smartyMaterialInput'],
             'material_checkbox' => ['function', 'smartyMaterialCheckbox'],
-            'material_select_date_a11y' => ['function', 'smartyMaterialSelectDateA11y']
+            'material_select_date_a11y' => ['function', 'smartyMaterialSelectDateA11y'],
+            'material_reading_time' => ['function', 'smartyMaterialReadingTime']
         ];
 
-        foreach ($plugins as $key => $value) {
-            $templateManager->unregisterPlugin($value[0], $key);
-            $templateManager->registerPlugin($value[0], $key, [$this, $value[1]], false);
-        }
+        $registerClasses = function($templateMgr) use ($plugins) {
+            if (method_exists($templateMgr, 'registerClass')) {
+                $templateMgr->registerClass('PKPApplication', '\PKP\core\PKPApplication');
+                $templateMgr->registerClass('PKPSubmission', '\PKP\submission\PKPSubmission');
+                $templateMgr->registerClass('Submission', '\APP\submission\Submission');
+                $templateMgr->registerClass('Journal', '\APP\journal\Journal');
+                $templateMgr->registerClass('Role', '\PKP\security\Role');
+            }
+            if (method_exists($templateMgr, 'registerPlugin')) {
+                $templateMgr->unregisterPlugin('modifier', 'is_array');
+                $templateMgr->unregisterPlugin('modifier', 'is_object');
+                $templateMgr->registerPlugin('modifier', 'is_array', 'is_array');
+                $templateMgr->registerPlugin('modifier', 'is_object', 'is_object');
+            }
+
+            foreach ($plugins as $key => $value) {
+                $templateMgr->unregisterPlugin($value[0], $key);
+                $templateMgr->registerPlugin($value[0], $key, [$this, $value[1]], false);
+            }
+        };
+
+        $registerClasses($templateManager);
+
+        \PKP\plugins\Hook::add('TemplateManager::display', function($hookName, $args) use ($registerClasses) {
+            $templateMgr = $args[0];
+            $registerClasses($templateMgr);
+            return false;
+        });
 
         // Get homepage image and use as header background if useAsHeader is true
         $context = Application::get()->getRequest()->getContext();
@@ -264,8 +373,14 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
      */
     public function getBaseColour() {
         $baseColour = $this->getOption('baseColour');
-        if (isset(['green' => 1, 'indigo' => 1, 'blue' => 1, 'sky' => 1, 'orange' => 1][$baseColour]))
+        $validColors = [
+            'sky' => 1, 'blue' => 1, 'indigo' => 1, 'purple' => 1,
+            'violet' => 1, 'teal' => 1, 'emerald' => 1, 'green' => 1,
+            'orange' => 1, 'amber' => 1, 'rose' => 1, 'slate' => 1
+        ];
+        if (isset($validColors[$baseColour])) {
             return $baseColour;
+        }
         return 'sky';
     }
 
@@ -393,13 +508,13 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
         $default .= " border-gray-300";
         $default .= " focus:border-{$this->getBaseColour()}-300";
         $default .= " focus:ring";
-        $default .= " focus:ring-{$this->getBaseColour()}-200";
-        $default .= " focus:ring-opacity-50";
+        $default .= " focus:ring-{$this->getBaseColour()}-200/50";
         $default .= " rounded-md";
         $default .= " shadow-sm";
         $default .= " dark:bg-gray-800";
         $default .= " dark:border-gray-500";
         $default .= " dark:text-white";
+
 
         $attributes = array();
         array_push($attributes, 'id');
@@ -464,7 +579,8 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
                     x-transition:leave-start="opacity-100 transform translate-y-0" 
                     x-transition:leave-end="opacity-0 transform -translate-y-2"
                     class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg
-                        ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-slate-800">
+                        ring-1 ring-black/5 focus:outline-none dark:bg-slate-800">
+
                     <ul class="py-1" role="list">
             HTML;
         }
@@ -548,70 +664,76 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
                             </div>
                         </div>
                     </div>
-                    <div style="position:fixed;top:1px;left:1px;width:1px;height:0;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0;display:none">             
-                    </div>
                 </div>
             HTML;
         } else {
             return <<<HTML
-                <div class="mr-6 {$params['class']}" x-data="{ open: false }">
+                <div class="mr-4 {$params['class']}" x-data="{ open: false }" x-effect="document.body.classList.toggle('overflow-hidden', open)">
                     <button type="button"
-                        class="relative"
+                        class="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-slate-700"
                         aria-label="Open navigation"
-                        x-on:click="open = !open" x-show="!open">
-                        <svg aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            class="h-6 w-6 stroke-slate-500" x-show="!open">
-                            <path d="M4 7h16M4 12h16M4 17h16"></path>
+                        @click="open = true">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke="currentColor" class="h-6 w-6">
+                            <path d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
 
-                    <div class="h-screen fixed inset-0 z-50 flex items-start overflow-y-auto bg-slate-900/50 pr-10 backdrop-blur xl:hidden"
-                        aria-label="Navigation"
-                        id="headlessui-dialog-:R35la:"
+                    <div class="fixed inset-0 z-50 flex xl:hidden"
                         role="dialog"
                         aria-modal="true"
-                        data-headlessui-state="open"
                         x-show="open"
-                        x-transition:enter="transition-transform transition-opacity ease-out duration-300" 
-                        x-transition:enter-start="-translate-x-full opacity-0 blur-sm"
-                        x-transition:enter-end="translate-x-0 opacity-100 blur-none"
-                        x-transition:leave="transition-transform transition-opacity ease-in duration-300"
-                        x-transition:leave-start="translate-x-0 opacity-100 blur-none"
-                        x-transition:leave-end="-translate-x-full opacity-0 blur-sm">
-                        <div class="min-h-full w-full max-w-xs bg-white px-4 pb-12 pt-5 sm:px-8 dark:bg-slate-900"
-                            id="headlessui-dialog-panel-:r3:"
-                            data-headlessui-state="open">
-                            <div class="flex items-center flex h-8 w-8 items-center justify-center border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm shadow-black/5 ring-1 ring-black/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5">
+                        x-cloak
+                        @keydown.window.escape="open = false"
+                        style="display: none;">
+                        
+                        <!-- Backdrop -->
+                        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+                            x-show="open"
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0"
+                            @click="open = false">
+                        </div>
+
+                        <!-- Drawer Panel -->
+                        <div class="relative flex w-full max-w-xs flex-col bg-white dark:bg-slate-900 shadow-2xl border-r border-slate-200/50 dark:border-slate-800/50"
+                            x-show="open"
+                            x-transition:enter="transition ease-out duration-300 transform"
+                            x-transition:enter-start="-translate-x-full"
+                            x-transition:enter-end="translate-x-0"
+                            x-transition:leave="transition ease-in duration-200 transform"
+                            x-transition:leave-start="translate-x-0"
+                            x-transition:leave-end="-translate-x-full">
+                            
+                            <!-- Drawer Header -->
+                            <div class="flex items-center justify-between px-5 pt-5 pb-3 border-b border-slate-100 dark:border-slate-800">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">Navigation</span>
                                 <button type="button"
-                                    class="relative"
-                                    aria-label="Open navigation"
-                                    x-on:click="open = !open" x-show="open">
-                                    <svg aria-hidden="true"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        class="h-6 w-6 stroke-slate-500 hover:stroke-slate-600">
-                                        <path d="M5 5l14 14M19 5l-14 14"></path>
+                                    class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors focus:outline-none"
+                                    aria-label="Close navigation"
+                                    @click="open = false">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                        <path d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
                                 </button>
                             </div>
-                            <div class="pt-5" id="headlessui-dialog-panel-:r4:">
+
+                            <!-- Drawer Body -->
+                            <div class="flex-1 overflow-y-auto px-5 py-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700">
             HTML;
         }
     }
+
 
     public function smartyMaterialInput($params, $smarty) {
         $default = "";
         $default .= " border-gray-300";
         $default .= " focus:border-{$this->getBaseColour()}-300";
         $default .= " focus:ring";
-        $default .= " focus:ring-{$this->getBaseColour()}-200";
-        $default .= " focus:ring-opacity-50";
+        $default .= " focus:ring-{$this->getBaseColour()}-200/50";
         $default .= " rounded-md";
         $default .= " shadow-sm";
         $default .= " dark:bg-gray-800";
@@ -652,8 +774,7 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
         $default .= " shadow-sm";
         $default .= " focus:border-{$this->getBaseColour()}-300";
         $default .= " focus:ring";
-        $default .= " focus:ring-{$this->getBaseColour()}-200";
-        $default .= " focus:ring-opacity-50";
+        $default .= " focus:ring-{$this->getBaseColour()}-200/50";
         $default .= " dark:bg-gray-800";
 
         $attributes = array();
@@ -685,13 +806,13 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
         $default .= " border-gray-300";
         $default .= " focus:border-{$this->getBaseColour()}-300";
         $default .= " focus:ring";
-        $default .= " focus:ring-{$this->getBaseColour()}-200";
-        $default .= " focus:ring-opacity-50";
+        $default .= " focus:ring-{$this->getBaseColour()}-200/50";
         $default .= " rounded-md";
         $default .= " shadow-sm";
         $default .= " dark:bg-gray-800";
         $default .= " dark:border-gray-500";
         $default .= " dark:text-white";
+
 
         if (!isset($params['prefix'], $params['legend'], $params['start_year'], $params['end_year'])) {
             throw new Exception('You must provide a prefix, legend, start_year and end_year when using html_select_date_a11y.');
@@ -763,8 +884,20 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
 
         return $output;
     }
+
+    /**
+     * Smarty plugin helper for calculating estimated reading time
+     */
+    public function smartyMaterialReadingTime($params, $smarty) {
+        $text = $params['text'] ?? '';
+        $cleanText = strip_tags($text);
+        $wordCount = str_word_count($cleanText);
+        $minutes = max(1, (int) ceil($wordCount / 200));
+        return $minutes . ' ' . __('plugins.themes.material.readingTime.minutes');
+    }
 }
 
 if (!PKP_STRICT_MODE) {
     class_alias('\APP\plugins\themes\material\MaterialThemePlugin', '\MaterialThemePlugin');
 }
+

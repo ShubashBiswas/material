@@ -15,7 +15,8 @@
 		{material_submenu}
 			{foreach from=$languageToggleLocales item=localeName key=localeKey}
 				{material_submenu_item class="locale_{$localeKey|escape}{if $localeKey == $currentLocale} current{/if}" lang="{$localeKey|replace:"_":"-"}"}
-					{material_submenu_link url="{url router=\PKP\core\PKPApplication::ROUTE_PAGE page="user" op="setLocale" path=$localeKey source=$smarty.server.REQUEST_URI}"}
+					{material_submenu_link url="{url page="user" op="setLocale" path=$localeKey source=$smarty.server.REQUEST_URI}"}
+
 						{$localeName}
 					{/material_submenu_link}
 				{/material_submenu_item}

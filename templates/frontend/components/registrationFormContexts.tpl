@@ -94,7 +94,8 @@
 										</span>
 										<span class="ml-2">
 											{capture assign="privacyUrl"}
-												{url router=\PKP\core\PKPApplication::ROUTE_PAGE context=$context->getPath() page="about" op="privacy"}
+												{url context=$context->getPath() page="about" op="privacy"}
+
 											{/capture}
 											{translate key="user.register.form.privacyConsentThisContext" privacyUrl=$privacyUrl}
 										</span>

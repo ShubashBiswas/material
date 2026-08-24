@@ -22,10 +22,11 @@
 	xml:lang="{$currentLocale|replace:"_":"-"}"
 	class="font-{$activeTheme->getOption('fontFamily')}" 
 	{literal}
-  		x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'light') }" 
+  		x-data="{ darkMode: localStorage.getItem('darkMode') || 'light' }" 
   		x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))" 
-  		x-bind:class="{'dark': darkMode === 'dark' || (darkMode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)}"
+  		:class="{'dark': darkMode === 'dark' || (darkMode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)}"
   	{/literal}>
+
 
 {if !$pageTitleTranslated}
 	{capture assign="pageTitleTranslated"}
@@ -38,10 +39,15 @@
 
 {if $requestedPage !== 'login' && $requestedPage !== 'user'}
 
+	{if $activeTheme->getOption('announcementText')}
+		<div class="bg-{$activeTheme->getBaseColour()}-600 text-white text-xs sm:text-sm font-medium py-2 px-4 text-center shadow-inner relative z-50 flex items-center justify-center space-x-2">
+			<svg class="w-4 h-4 inline-block flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+			<span>{$activeTheme->getOption('announcementText')|escape}</span>
+		</div>
+	{/if}
+
 	<!-- ======= Header ======= -->
 	<header class="sticky top-0 z-50 flex flex-none flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 sm:px-6 lg:px-8 dark:shadow-none dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75">
-		{* Skip to content nav links *}
-		{*include file="frontend/components/skipLinks.tpl"*}
 
 		{material_sidestack class="flex xl:hidden"}
 			<div class="space-y-9">
@@ -50,9 +56,6 @@
 						{load_menu name="primary" id="navigationPrimary" ulClass="pkp_navigation_primary"}
 					{/capture}
 					{$primaryMenu}
-				</div>
-				<div class="xl:hidden">
-					{include file="frontend/components/sidebar.tpl"}
 				</div>
 				<div class="md:hidden">
 					{load_menu name="user" id="navigationUser" ulClass="pkp_navigation_user" liClass="profile"}
@@ -80,7 +83,6 @@
 					</a>
 				</div>
 			{/if}
-			{*include file="frontend/components/ui/localeSelector.tpl"*}
 			{include file="frontend/components/ui/material_theme_selector.tpl"}
 			{load_menu name="user" id="navigationUser" ulClass="pkp_navigation_user hidden md:flex" liClass="profile"}
 		</div>
@@ -96,23 +98,17 @@
 		{load_menu name="primary" id="navigationPrimary" ulClass="pkp_navigation_primary"}
 	{/capture}
 
-	<div class="relative mx-auto flex w-full max-w-8xl flex-auto justify-center sm:px-2 lg:px-8 xl:px-12">
-		<div class="hidden lg:relative lg:block lg:flex-none">
-			<div class="absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden">
-			</div>
-			<div class="absolute bottom-0 right-0 top-16 hidden h-12 w-px bg-gradient-to-t from-slate-800 dark:block">
-			</div>
-			<div class="absolute bottom-0 right-0 top-28 hidden w-px bg-slate-800 dark:block">
-			</div>
-			{if $activeTheme->getOption('primaryMenu') == 'vertical'}
-				<div class="sticky top-[4.75rem] -ml-0.5 h-[calc(100vh-4.75rem)] w-64 overflow-y-auto overflow-x-hidden py-16 pl-0.5 pr-8 xl:w-72 xl:pr-16 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
+	<div class="relative mx-auto flex flex-col xl:flex-row w-full flex-auto justify-between gap-8 xl:gap-12 px-4 sm:px-6 lg:px-8 xl:px-12">
+		{if $activeTheme->getOption('primaryMenu') == 'vertical'}
+			<div class="hidden lg:relative lg:block lg:flex-none">
+				<div class="sticky top-[4.75rem] h-[calc(100vh-4.75rem)] w-64 xl:w-72 overflow-y-auto overflow-x-hidden py-8 xl:py-16 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
 					<nav class="text-base lg:text-sm">
 						{* Primary navigation menu for current application *}
 						{$primaryMenu}
 					</nav>
 				</div>
-			{/if}
-		</div>
+			</div>
+		{/if}
 
 		{* Wrapper for page content and sidebars *}
 		{if $isFullWidth}
@@ -120,11 +116,10 @@
 		{/if}
 
 		{* Main *}
-		<main class="min-w-0 max-w-2xl flex-auto px-4 py-16 lg:max-w-none lg:pl-8 lg:pr-0 xl:px-16 dark:text-white">
+		<main class="min-w-0 w-full flex-auto py-8 lg:py-16 dark:text-white">
 			<a id="pkp_content_main"></a>
 			<article>
-				<!--div class="prose prose-slate max-w-none dark:prose-invert dark:text-slate-400 prose-headings:scroll-mt-28 prose-headings:font-display prose-headings:font-normal lg:prose-headings:scroll-mt-[8.5rem] prose-lead:text-slate-500 dark:prose-lead:text-slate-400 prose-a:font-semibold dark:prose-a:text-sky-400 prose-a:no-underline prose-a:shadow-[inset_0_-2px_0_0_var(--tw-prose-background,#fff),inset_0_calc(-1*(var(--tw-prose-underline-size,4px)+2px))_0_0_var(--tw-prose-underline,theme(colors.sky.300))] hover:prose-a:[--tw-prose-underline-size:6px] dark:[--tw-prose-background:theme(colors.slate.900)] dark:prose-a:shadow-[inset_0_calc(-1*var(--tw-prose-underline-size,2px))_0_0_var(--tw-prose-underline,theme(colors.sky.800))] dark:hover:prose-a:[--tw-prose-underline-size:6px] prose-pre:rounded-xl prose-pre:bg-slate-900 prose-pre:shadow-lg dark:prose-pre:bg-slate-800/60 dark:prose-pre:shadow-none dark:prose-pre:ring-1 dark:prose-pre:ring-slate-300/10 dark:prose-hr:border-slate-800"-->
-				<div  class="prose prose-slate max-w-none prose-a:text-{$activeTheme->getBaseColour()}-400 dark:prose-a:text-{$activeTheme->getBaseColour()}-400 dark:prose-invert dark:text-slate-400 dark:prose-lead:text-slate-400 prose-headings:font-normal">
+				<div class="prose prose-slate max-w-none w-full prose-a:text-{$activeTheme->getBaseColour()}-400 dark:prose-a:text-{$activeTheme->getBaseColour()}-400 dark:prose-invert dark:text-slate-400 dark:prose-lead:text-slate-400 prose-headings:font-normal">
 {else}
 	<main class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900 dark:text-white" role="main">
 		<a id="pkp_content_main"></a>

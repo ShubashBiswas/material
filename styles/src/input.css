@@ -1,18 +1,33 @@
-@import "tailwindcss/base";
+@import "tailwindcss";
 
-@import "tailwindcss/components";
+@custom-variant dark (&:where(.dark, .dark *));
 
-@import "tailwindcss/utilities";
+@source "./templates/**/*.tpl";
+@source "./MaterialThemePlugin.php";
+
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+@plugin "tailwind-scrollbar";
+
+@theme {
+	--font-inter: Inter, sans-serif;
+	--font-plus-jakarta-sans: "Plus Jakarta Sans", sans-serif;
+	--font-open-sans: "Open Sans", sans-serif;
+	--font-merriweather: Merriweather, serif;
+	--font-lora: Lora, serif;
+	--font-comic-sans: "Comic Sans", sans-serif;
+	--font-comic-neue: "Comic Neue", sans-serif;
+	--font-cardo: Cardo, serif;
+	--font-cormorant: Cormorant, serif;
+	--font-old-standard-tt: "Old Standard TT", serif;
+	--font-roboto-serif: "Roboto Serif", serif;
+
+	--breakpoint-8xl: 88rem;
+}
 
 @layer components {
 	input {
-		@apply rounded-md;
-		@apply border-gray-300;
-		@apply shadow-sm;
-		@apply focus:border-indigo-300;
-		@apply focus:ring;
-		@apply focus:ring-indigo-200;
-		@apply focus:ring-opacity-50;
+		@apply rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200/50;
 	}
 }
 
