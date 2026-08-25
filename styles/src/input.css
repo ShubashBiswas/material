@@ -1,9 +1,11 @@
 @import "tailwindcss";
+@config "../../tailwind.config.js";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@variant dark (.dark &);
 
 @source "./templates/**/*.tpl";
-@source "./MaterialThemePlugin.php";
+@source "./templates/frontend/objects/article_details.tpl";
+@source "./templates/frontend/pages/article.tpl";
 
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
@@ -25,9 +27,125 @@
 	--breakpoint-8xl: 88rem;
 }
 
+.grid-cols-12 {
+	display: grid !important;
+	grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+}
+.col-span-12 {
+	grid-column: span 12 / span 12 !important;
+}
+@media (min-width: 1024px) {
+	.lg-grid-cols-12 {
+		grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+	}
+	.lg-col-span-8 {
+		grid-column: span 8 / span 8 !important;
+	}
+	.lg-col-span-4 {
+		grid-column: span 4 / span 4 !important;
+	}
+}
+
 @layer components {
 	input {
 		@apply rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200/50;
+	}
+
+	/* Sidebar Block Card Widgets */
+	aside.sidebar .pkp_block,
+	.pkp_structure_sidebar .pkp_block,
+	aside.sidebar > div > .pkp_block {
+		@apply rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 p-5 shadow-sm hover:shadow-md transition-all duration-200 mb-6 relative overflow-hidden;
+	}
+
+	aside.sidebar .pkp_block:last-child,
+	.pkp_structure_sidebar .pkp_block:last-child {
+		@apply mb-0;
+	}
+
+	aside.sidebar .pkp_block .title,
+	aside.sidebar .pkp_block h2,
+	aside.sidebar .pkp_block h3,
+	.pkp_structure_sidebar .pkp_block .title,
+	.pkp_structure_sidebar .pkp_block h2,
+	.pkp_structure_sidebar .pkp_block h3 {
+		@apply text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-800/80 block;
+	}
+
+	aside.sidebar .pkp_block ul,
+	.pkp_structure_sidebar .pkp_block ul {
+		@apply space-y-1.5 text-xs sm:text-sm;
+	}
+
+	aside.sidebar .pkp_block ul li a,
+	.pkp_structure_sidebar .pkp_block ul li a {
+		@apply block py-1.5 px-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors font-medium;
+	}
+
+	/* Article Summary Card Component (Plugin Compatibility) */
+	.obj_article_summary {
+		@apply relative flex flex-col gap-3 p-5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/80 shadow-sm hover:shadow-md transition-all duration-200 w-full my-4 overflow-hidden;
+	}
+
+	.obj_article_summary .title,
+	.obj_article_summary h2,
+	.obj_article_summary h3,
+	.obj_article_summary h4 {
+		@apply text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 leading-snug m-0 p-0;
+	}
+
+	.obj_article_summary .title a,
+	.obj_article_summary h2 a,
+	.obj_article_summary h3 a,
+	.obj_article_summary h4 a {
+		@apply text-slate-900 dark:text-slate-100 hover:text-slate-700 dark:hover:text-slate-300 transition-colors no-underline;
+	}
+
+	.obj_article_summary .title .subtitle {
+		@apply block text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 leading-normal;
+	}
+
+	.obj_article_summary .meta {
+		@apply w-full flex flex-wrap items-center gap-2 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/80;
+	}
+
+	.obj_article_summary .authors {
+		@apply w-full text-sm font-medium text-slate-600 dark:text-slate-300 mb-1 flex flex-wrap items-center gap-1.5;
+	}
+
+	.obj_article_summary .pages,
+	.obj_article_summary .published {
+		@apply inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50 text-xs font-medium;
+	}
+
+	.obj_article_summary .pages::before {
+		content: "pp. ";
+		@apply font-semibold opacity-75 mr-0.5;
+	}
+
+	.obj_article_summary ul.galleys_links,
+	.obj_article_summary .galleys_links {
+		@apply flex flex-wrap items-center gap-2 list-none p-0 m-0 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/80;
+	}
+
+	.obj_article_summary .doiInSummary {
+		@apply text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-medium;
+	}
+
+	.obj_article_summary .doiInSummary a {
+		@apply text-slate-600 dark:text-slate-400 hover:underline;
+	}
+
+	.obj_article_summary .viewcounter-stats {
+		@apply inline-flex items-center gap-3 text-xs font-medium !text-slate-500 dark:!text-slate-400;
+	}
+
+	.item.references,
+	.item.references .value,
+	.item.references a {
+		overflow-wrap: break-word;
+		word-break: break-word;
+		hyphens: auto;
 	}
 }
 

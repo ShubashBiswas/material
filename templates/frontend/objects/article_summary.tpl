@@ -85,6 +85,8 @@
                         <span>pp. {$submissionPages|escape}</span>
                     </span>
                 {/if}
+
+                {viewcounterStats submission=$article fontSize="12px"}
             </div>
 
             {if !$hideGalleys}

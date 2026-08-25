@@ -5,7 +5,8 @@
   "scripts": {
     "build:css": "npx @tailwindcss/cli -i ./styles/src/input.css -o ./styles/dist/output.css --minify",
     "watch:css": "npx @tailwindcss/cli -i ./styles/src/input.css -o ./styles/dist/output.css --watch",
-    "build": "npm run build:css"
+    "build": "npm run build:css",
+    "package": "powershell -ExecutionPolicy Bypass -File ./package-plugin.ps1"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.0",

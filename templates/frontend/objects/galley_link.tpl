@@ -4,8 +4,7 @@
  * Copyright (c) 2021 Madi Nuralin
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @brief View of a galley object as a link to view or download the galley, to be used
- *  in a list of galleys.
+ * @brief View of a galley object as a button/link to view or download the galley.
  *
  * @uses $galley Galley
  * @uses $parent Issue|Article Object which these galleys are attached to
@@ -15,31 +14,26 @@
  * @uses $restrictOnlyPdf bool Is access only restricted to PDF galleys?
  * @uses $purchaseArticleEnabled bool Can this article be purchased?
  * @uses $currentJournal Journal The current journal context
- * @uses $journalOverride Journal An optional argument to override the current
- *       journal with a specific context
+ * @uses $journalOverride Journal An optional argument to override the current journal
  *}
 
-{* Override the $currentJournal context if desired *}
 {if $journalOverride}
 	{assign var="currentJournal" value=$journalOverride}
 {/if}
 
-{* Determine galley type and URL op *}
 {if $galley->isPdfGalley()}
 	{assign var="type" value="pdf"}
 {else}
 	{assign var="type" value="file"}
 {/if}
 
-{* Get page and parentId for URL *}
-{if $parent instanceOf Issue}
+{if $parent|is_a:'Issue'}
 	{assign var="page" value="issue"}
 	{assign var="parentId" value=$parent->getBestIssueId()}
 	{assign var="path" value=$parentId|to_array:$galley->getBestGalleyId()}
 {else}
 	{assign var="page" value="article"}
 	{assign var="parentId" value=$parent->getBestId()}
-	{* Get a versioned link if we have an older publication *}
 	{if $publication && $publication->getId() !== $parent->getCurrentPublication()->getId()}
 		{assign var="path" value=$parentId|to_array:"version":$publication->getId():$galley->getBestGalleyId()}
 	{else}
@@ -47,7 +41,6 @@
 	{/if}
 {/if}
 
-{* Get user access flag *}
 {if !$hasAccess}
 	{if $restrictOnlyPdf && $type=="pdf"}
 		{assign var=restricted value="1"}
@@ -56,73 +49,44 @@
 	{/if}
 {/if}
 
-{* Don't be frightened. This is just a link *}
 <a class="
-	not-prose inline-flex items-center space-x-1 rounded-full py-2 px-4 text-sm font-semibold
+	group w-full inline-flex items-center justify-between px-5 py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-200 shadow-sm hover:shadow-md border
 	{if $restricted}
-		restricted
-		text-white
-		bg-red-800
-		hover:bg-red-700
-		focus:outline-none
-		focus-visible:outline-2
-		focus-visible:outline-offset-2
-		focus-visible:outline-white/50
-		active:text-red-400
-	{else if $isSupplementary}
-		obj_galley_link_supplementary
-		text-white
-		bg-slate-800
-		hover:bg-slate-700
-		focus:outline-none
-		focus-visible:outline-2
-		focus-visible:outline-offset-2
-		focus-visible:outline-white/50
-		active:text-slate-400
+		bg-rose-500 hover:bg-rose-600 text-white border-rose-600 focus:ring-2 focus:ring-rose-500
+	{elseif $isSupplementary}
+		bg-slate-800 hover:bg-slate-900 text-slate-100 border-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-600
 	{else}
-		obj_galley_link 
-		text-slate-900
-		bg-{$activeTheme->getBaseColour()}-300
-		hover:bg-{$activeTheme->getBaseColour()}-200
-		focus:outline-none
-		focus-visible:outline-2
-		focus-visible:outline-offset-2
-		focus-visible:outline-{$activeTheme->getBaseColour()}-300/50
-		active:bg-{$activeTheme->getBaseColour()}-500
+		bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white border-transparent shadow-sky-500/20 active:scale-[0.99]
 	{/if}"
 	href="{url page=$page op="view" path=$path}"
 	{if $labelledBy}
-		aria-labelledby={$labelledBy}
+		aria-labelledby="{$labelledBy}"
 	{/if}>
 
-	<div>
-		{if $restricted}
-			{include file="frontend/components/ui/material_icon_lock.tpl"}
-		{else if $type == "pdf"}
-			{include file="frontend/components/ui/material_icon_pdf.tpl"}
+	<div class="flex items-center space-x-3 min-w-0">
+		<div class="p-1.5 rounded-lg bg-white/10 text-white shrink-0 group-hover:scale-110 transition-transform">
+			{if $restricted}
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+			{elseif $type == "pdf"}
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+			{else}
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+			{/if}
+		</div>
+		<span class="truncate uppercase text-xs sm:text-sm font-extrabold tracking-wider">
+			{$galley->getGalleyLabel()|escape}
+		</span>
+	</div>
+
+	<div class="flex items-center space-x-2 shrink-0">
+		{if $restricted && $purchaseFee && $purchaseCurrency}
+			<span class="text-xs font-semibold px-2 py-0.5 rounded bg-black/20 text-white">
+				{translate key="reader.purchasePrice" price=$purchaseFee currency=$purchaseCurrency}
+			</span>
 		{else}
-			{include file="frontend/components/ui/material_icon_file_text.tpl"}
+			<svg class="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7-7 7M3 12h18"></path>
+			</svg>
 		{/if}
 	</div>
-
-	{* Add some screen reader text to indicate if a galley is restricted *}
-	{*if $restricted}
-		<span class="pkp_screen_reader">
-			{if $purchaseArticleEnabled}
-				{translate key="reader.subscriptionOrFeeAccess"}
-			{else}
-				{translate key="reader.subscriptionAccess"}
-			{/if}
-		</span>
-	{/if*}
-
-	<div>
-		{$galley->getGalleyLabel()|escape}
-	</div>
-
-	{if $restricted && $purchaseFee && $purchaseCurrency}
-		<span class="purchase_cost">
-			{translate key="reader.purchasePrice" price=$purchaseFee currency=$purchaseCurrency}
-		</span>
-	{/if}
 </a>

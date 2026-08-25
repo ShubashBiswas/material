@@ -7,13 +7,14 @@
  * @brief Sidebars.
  *}
 
-{* Sidebars *}
 {if empty($isFullWidth)}
   {capture assign="sidebarCode"}
   {call_hook name="Templates::Common::Sidebar"}{/capture}
   {if $sidebarCode}
-    {material_menu aria-label="{translate|escape key="common.navigation.sidebar"}"}
-      {$sidebarCode}
-    {/material_menu}<!-- pkp_sidebar.left -->
+    <aside class="pkp_structure_sidebar sidebar flex flex-col space-y-6 w-full max-w-full" aria-label="{translate|escape key="common.navigation.sidebar"}">
+      {material_menu aria-label="{translate|escape key="common.navigation.sidebar"}"}
+        {$sidebarCode}
+      {/material_menu}
+    </aside>
   {/if}
 {/if}

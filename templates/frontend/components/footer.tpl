@@ -10,17 +10,21 @@
  *       represents a page-level override, and doesn't indicate whether or not
  *       sidebars have been configured for thesite.
  *}
-      </div>
-    </article>
 	</main><!-- _pkp_structure_main -->
 
-  {if $requestedPage !== 'login' && $requestedPage !== 'user'}
-    <div class="w-full xl:w-64 xl:sticky xl:top-[4.75rem] xl:h-[calc(100vh-4.75rem)] xl:flex-none overflow-y-auto overflow-x-hidden py-8 xl:py-16 border-t border-slate-200/60 dark:border-slate-800 xl:border-t-0 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800 mt-12 xl:mt-0">
-      <nav aria-label="Sidebar navigation" class="w-full space-y-8">
-        {include file="frontend/components/sidebar.tpl"}
-      </nav>
-    </div>
+  {if $requestedPage !== 'login' && $requestedPage !== 'user' && empty($isFullWidth)}
+    {capture assign="sidebarContent"}
+      {include file="frontend/components/sidebar.tpl"}
+    {/capture}
+    {if $sidebarContent|trim}
+      <div class="w-full xl:w-80 xl:flex-none py-4 xl:py-0 border-t border-slate-200/60 dark:border-slate-800 xl:border-t-0 mt-8 xl:mt-0">
+        <nav aria-label="Sidebar navigation" class="w-full space-y-8">
+          {$sidebarContent}
+        </nav>
+      </div>
+    {/if}
   {/if}
+
 </div>
 
 {if $requestedPage !== 'login' && $requestedPage !== 'user'}
