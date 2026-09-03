@@ -310,6 +310,13 @@ class MaterialThemePlugin extends \PKP\plugins\ThemePlugin
                 $templateMgr->unregisterPlugin($value[0], $key);
                 $templateMgr->registerPlugin($value[0], $key, [$this, $value[1]], false);
             }
+
+            // Register fallback for viewcounterStats if viewcounter plugin is not loaded/enabled
+            if (method_exists($templateMgr, 'registerPlugin') && !isset($templateMgr->registered_plugins['function']['viewcounterStats'])) {
+                $templateMgr->registerPlugin('function', 'viewcounterStats', function ($params, $smarty) {
+                    return '';
+                });
+            }
         };
 
         $registerClasses($templateManager);
